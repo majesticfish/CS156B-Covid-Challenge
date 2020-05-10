@@ -162,7 +162,7 @@ class MobilityCounter:
         for fips in tqdm(self.fips_list):
             county_data = counties[counties['fips'] == fips]
             county_data['date'] = county_data['date'].map(lambda l: (get_date(l) - get_date('2020-01-01')).days)
-            self.data[fips] = county_data['date'], county_data['m50']
+            self.data[fips] = county_data['date'], county_data['m50_index']
     def getY(self, fips):
         if fips not in self.fips_list:
             raise ValueError('No Mobility data for this fips')
@@ -195,7 +195,7 @@ def add_neighbors(df, neighbor_cols = ['pclon10', 'pclat10'], k = 5, feature_col
             for feature in feature_cols:
                 df['neighbor'+str(i+1)+'_'+feature] = data[feature].values
     return df
-def add_radius_neighbors(df, neighbor_cols = ['pclon10', 'pclat10'], k = 30, radius = 0.5):
+def add_radius_neighbors(df, neighbor_cols = ['pclon10', 'pclat10'], k = 30, radius = 0.65):
     if(len(df) > k):
         # N+1 neighbors because the closest neighbor is itself
         model = neighbors.NearestNeighbors(k+1, n_jobs = 4).fit(df[neighbor_cols])
