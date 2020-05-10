@@ -90,6 +90,32 @@ class CumCaseCounter():
                 return X[i:], y[i:]
     def getY(self, fips):
         return self.cache[fips]
+class DeltaDeathCounter():
+    def __init__(self):
+        self.df = pd.read_csv(f"{homedir}/data/us/covid/nyt_us_counties_daily.csv")
+        fips_list = self.df.fips.unique()
+
+        self.cache = {}
+        for fips in tqdm(fips_list):
+            county = self.df.loc[self.df['fips'] == fips]
+            X = np.array([(get_date(d) - get_date('2020-01-01')).days for d in county.date])
+            y = county.deaths
+            self.cache[fips] = X,y
+    def getY(self, fips):
+        return self.cache[fips]
+class DeltaCaseCounter():
+    def __init__(self):
+        self.df = pd.read_csv(f"{homedir}/data/us/covid/nyt_us_counties_daily.csv")
+        fips_list = self.df.fips.unique()
+
+        self.cache = {}
+        for fips in tqdm(fips_list):
+            county = self.df.loc[self.df['fips'] == fips]
+            X = np.array([(get_date(d) - get_date('2020-01-01')).days for d in county.date])
+            y = county.cases
+            self.cache[fips] = X,y
+    def getY(self, fips):
+        return self.cache[fips]
 
 class DeltaCounter:
     def __init__(self, counter):
